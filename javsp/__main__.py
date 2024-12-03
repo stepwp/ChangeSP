@@ -335,10 +335,13 @@ def generate_names(movie: Movie):
             basename = os.path.normpath(Cfg().summarizer.path.basename_pattern.format(**copyd)).strip()
         movie.save_dir = save_dir
         movie.basename = basename
-
-        movie.nfo_file = os.path.join(save_dir, Cfg().summarizer.nfo.basename_pattern.format(**copyd) + '.nfo')
-        movie.fanart_file = os.path.join(save_dir, Cfg().summarizer.fanart.basename_pattern.format(**copyd) + '.jpg')
-        movie.poster_file = os.path.join(save_dir, Cfg().summarizer.cover.basename_pattern.format(**copyd) + '.jpg')
+        
+        # movie.nfo_file = os.path.join(save_dir, Cfg().summarizer.nfo.basename_pattern.format(**copyd) + '.nfo')
+        # movie.fanart_file = os.path.join(save_dir, Cfg().summarizer.fanart.basename_pattern.format(**copyd) + '.jpg')
+        # movie.poster_file = os.path.join(save_dir, Cfg().summarizer.cover.basename_pattern.format(**copyd) + '.jpg')
+        movie.nfo_file = os.path.join(save_dir, f'{basename}{cdx}.nfo')
+        movie.fanart_file = os.path.join(save_dir, f'{basename}{cdx}-fanart.jpg')
+        movie.poster_file = os.path.join(save_dir, f'{basename}{cdx}-poster.jpg')
 
         if d['title'] != copyd['title']:
             logger.info(f"自动截短标题为:\n{copyd['title']}")
@@ -534,8 +537,8 @@ def RunNormalMode(all_movies):
                 check_step(True)
 
             # 增加图片复制
-            if 'jellyfin' in cfg.NamingRule.media_servers:
-                CopyPic(movie)
+            #if 'jellyfin' in cfg.NamingRule.media_servers:
+            CopyPic(movie)
 
             # 增加修改genre
             inner_bar.set_description('修改NFO的genre')
