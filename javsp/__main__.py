@@ -403,6 +403,48 @@ def process_poster(movie: Movie):
             fanart_cropped = add_label_to_poster(fanart_cropped, UNCENSORED_MARK_FILE, LabelPostion.BOTTOM_LEFT)
     fanart_cropped.save(movie.poster_file)
 
+def get_type(dirpath:str):
+    for dir in dirpath.split('\\'):
+        if "HNJN" in dir:
+            return "HNJN"
+        elif "HUJN" in dir:
+            return "HUJN"
+        elif "UNJN" in dir:
+            return "UNJN"
+        elif "UUJN" in dir:
+            return "UUJN"
+        elif "HWJN" in dir:
+            return "HWJN"
+        elif "HNJR" in dir:
+            return "HNJR"
+        elif "HUJR" in dir:
+            return "HUJR"
+        elif "UNJR" in dir:
+            return "UNJR"
+        elif "UUJR" in dir:
+            return "UUJR"
+        elif "HWJR" in dir:
+            return "HWJR"
+    return ""
+
+def AddGenre(movie: Movie):
+    if len(movie.files) > 0:
+        tpye_dir=get_type(movie.files[0])
+        if len(tpye_dir) > 0:
+            if tpye_dir[1] == "U":
+                movie.info.genre.append("破解")
+            elif tpye_dir[1] == "W":
+                movie.info.genre.append("无码")
+            if tpye_dir[3] == "R":
+                movie.info.genre.append("中文")
+
+def CopyPic(movie: Movie):
+    new_fanart_file=os.path.join(movie.save_dir,'fanart.jpg')
+    new_poster_file=os.path.join(movie.save_dir,'poster.jpg')
+    os.system('copy %s %s' % (movie.fanart_file,new_fanart_file))
+    os.system('copy %s %s' % (movie.poster_file,new_poster_file))
+
+
 def RunNormalMode(all_movies):
     """普通整理模式"""
     def check_step(result, msg='步骤错误'):
@@ -491,6 +533,15 @@ def RunNormalMode(all_movies):
                         time.sleep(scrape_interval)
                 check_step(True)
 
+            # 增加图片复制
+            if 'jellyfin' in cfg.NamingRule.media_servers:
+                CopyPic(movie)
+
+            # 增加修改genre
+            inner_bar.set_description('修改NFO的genre')
+            AddGenre(movie)
+
+            
             inner_bar.set_description('写入NFO')
             write_nfo(movie.info, movie.nfo_file)
             check_step(True)
