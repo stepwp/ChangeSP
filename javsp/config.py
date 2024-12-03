@@ -159,6 +159,7 @@ class CoverSummarize(BaseConfig):
 class FanartSummarize(BaseConfig):
     basename_pattern: str
 
+#自适配——增加force_all参数
 class Summarizer(BaseConfig):
     default: MovieDefault
     censor_options_representation: list[str]

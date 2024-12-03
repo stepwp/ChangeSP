@@ -73,9 +73,10 @@ def write_nfo(info: MovieInfo, nfo_file):
             tags.append(tag_new.format(**dic))
     # 去重
     tags = list(set(tags))
+    #自适配——去掉tags
     # 写入tag
-    for i in tags:
-        nfo.append(E.tag(i))
+    #for i in tags:
+    #    nfo.append(E.tag(i))
 
     # Kodi上的country字段没说必须使用国家的代码（比如JP），所以目前暂定直接使用国家名
     nfo.append(E.country('日本'))

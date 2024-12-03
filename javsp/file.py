@@ -136,12 +136,12 @@ def scan_movies(root: str) -> List[Movie]:
     movies: List[Movie] = []
     for avid, files in dic.items():
 
-        #增加自动跳过
-        if cfg.File.force_all is False:
-            nfo_file=files[0].split('.')[0]+".nfo"
-            #print(nfo_file)
-            if os.path.exists(nfo_file):
-                continue
+        #自适配——增加自动跳过
+        if Cfg().summarizer.force_all is False:
+            nfo_file=files[0].split('.')[0]+".nfo"
+            #print(nfo_file)
+            if os.path.exists(nfo_file):
+                continue
 
         src = guess_av_type(avid)
         if src != 'cid':

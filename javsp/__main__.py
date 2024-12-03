@@ -312,9 +312,16 @@ def generate_names(movie: Movie):
             if remaining > 0:
                 movie.save_dir = save_dir
                 movie.basename = basename
-                movie.nfo_file = os.path.join(save_dir, Cfg().summarizer.nfo.basename_pattern.format(**copyd) + '.nfo')
-                movie.fanart_file = os.path.join(save_dir, Cfg().summarizer.fanart.basename_pattern.format(**copyd) + '.jpg')
-                movie.poster_file = os.path.join(save_dir, Cfg().summarizer.cover.basename_pattern.format(**copyd) + '.jpg')
+                
+                #自适配——修改文件名称规则
+                #movie.nfo_file = os.path.join(save_dir, Cfg().summarizer.nfo.basename_pattern.format(**copyd) + '.nfo')
+                #movie.fanart_file = os.path.join(save_dir, Cfg().summarizer.fanart.basename_pattern.format(**copyd) + '.jpg')
+                #movie.poster_file = os.path.join(save_dir, Cfg().summarizer.cover.basename_pattern.format(**copyd) + '.jpg')
+                
+                movie.nfo_file = os.path.join(save_dir, f'{basename}{cdx}.nfo')
+                movie.fanart_file = os.path.join(save_dir, f'{basename}{cdx}-fanart.jpg')
+                movie.poster_file = os.path.join(save_dir, f'{basename}{cdx}-poster.jpg')
+
                 if d['title'] != copyd['title']:
                     logger.info(f"自动截短标题为:\n{copyd['title']}")
                 if d['rawtitle'] != copyd['rawtitle']:
@@ -335,7 +342,7 @@ def generate_names(movie: Movie):
             basename = os.path.normpath(Cfg().summarizer.path.basename_pattern.format(**copyd)).strip()
         movie.save_dir = save_dir
         movie.basename = basename
-        
+        #自适配——修改文件名称规则
         # movie.nfo_file = os.path.join(save_dir, Cfg().summarizer.nfo.basename_pattern.format(**copyd) + '.nfo')
         # movie.fanart_file = os.path.join(save_dir, Cfg().summarizer.fanart.basename_pattern.format(**copyd) + '.jpg')
         # movie.poster_file = os.path.join(save_dir, Cfg().summarizer.cover.basename_pattern.format(**copyd) + '.jpg')
@@ -406,46 +413,49 @@ def process_poster(movie: Movie):
             fanart_cropped = add_label_to_poster(fanart_cropped, UNCENSORED_MARK_FILE, LabelPostion.BOTTOM_LEFT)
     fanart_cropped.save(movie.poster_file)
 
+#自适配——增加种类文件
 def get_type(dirpath:str):
-    for dir in dirpath.split('\\'):
-        if "HNJN" in dir:
-            return "HNJN"
-        elif "HUJN" in dir:
-            return "HUJN"
-        elif "UNJN" in dir:
-            return "UNJN"
-        elif "UUJN" in dir:
-            return "UUJN"
-        elif "HWJN" in dir:
-            return "HWJN"
-        elif "HNJR" in dir:
-            return "HNJR"
-        elif "HUJR" in dir:
-            return "HUJR"
-        elif "UNJR" in dir:
-            return "UNJR"
-        elif "UUJR" in dir:
-            return "UUJR"
-        elif "HWJR" in dir:
-            return "HWJR"
-    return ""
+    for dir in dirpath.split('\\'):
+        if "HNJN" in dir:
+            return "HNJN"
+        elif "HUJN" in dir:
+            return "HUJN"
+        elif "UNJN" in dir:
+            return "UNJN"
+        elif "UUJN" in dir:
+            return "UUJN"
+        elif "HWJN" in dir:
+            return "HWJN"
+        elif "HNJR" in dir:
+             return "HNJR"
+        elif "HUJR" in dir:
+             return "HUJR"
+        elif "UNJR" in dir:
+            return "UNJR"
+        elif "UUJR" in dir:
+            return "UUJR"
+        elif "HWJR" in dir:
+            return "HWJR"
+    return ""
 
+#自适配——增加类型
 def AddGenre(movie: Movie):
-    if len(movie.files) > 0:
-        tpye_dir=get_type(movie.files[0])
-        if len(tpye_dir) > 0:
-            if tpye_dir[1] == "U":
-                movie.info.genre.append("破解")
-            elif tpye_dir[1] == "W":
-                movie.info.genre.append("无码")
-            if tpye_dir[3] == "R":
-                movie.info.genre.append("中文")
+    if len(movie.files) > 0:
+        tpye_dir=get_type(movie.files[0])
+        if len(tpye_dir) > 0:
+            if tpye_dir[1] == "U":
+                 movie.info.genre.append("破解")
+            elif tpye_dir[1] == "W":
+                movie.info.genre.append("无码")
+            if tpye_dir[3] == "R":
+                movie.info.genre.append("中文")
 
+#自适配——增加图片文件拷贝
 def CopyPic(movie: Movie):
-    new_fanart_file=os.path.join(movie.save_dir,'fanart.jpg')
-    new_poster_file=os.path.join(movie.save_dir,'poster.jpg')
-    os.system('copy %s %s' % (movie.fanart_file,new_fanart_file))
-    os.system('copy %s %s' % (movie.poster_file,new_poster_file))
+    new_fanart_file=os.path.join(movie.save_dir,'fanart.jpg')
+    new_poster_file=os.path.join(movie.save_dir,'poster.jpg')
+    os.system('copy %s %s' % (movie.fanart_file,new_fanart_file))
+    os.system('copy %s %s' % (movie.poster_file,new_poster_file))
 
 
 def RunNormalMode(all_movies):
@@ -537,12 +547,12 @@ def RunNormalMode(all_movies):
                 check_step(True)
 
             # 增加图片复制
-            #if 'jellyfin' in cfg.NamingRule.media_servers:
-            CopyPic(movie)
+            #if 'jellyfin' in cfg.NamingRule.media_servers:
+            CopyPic(movie)
 
-            # 增加修改genre
-            inner_bar.set_description('修改NFO的genre')
-            AddGenre(movie)
+            # 增加修改genre
+            inner_bar.set_description('修改NFO的genre')
+            AddGenre(movie)
 
             
             inner_bar.set_description('写入NFO')
@@ -638,7 +648,7 @@ def entry():
     # 检查更新
     version_info = 'JavSP ' + getattr(sys, 'javsp_version', '未知版本/从代码运行')
     logger.debug(version_info.center(60, '='))
-    check_update(Cfg().other.check_update, Cfg().other.auto_update)
+#    check_update(Cfg().other.check_update, Cfg().other.auto_update)
     root = get_scan_dir(Cfg().scanner.input_directory)
     error_exit(root, '未选择要扫描的文件夹')
     # 导入抓取器，必须在chdir之前
