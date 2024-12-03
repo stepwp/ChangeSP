@@ -164,6 +164,7 @@ class Summarizer(BaseConfig):
     censor_options_representation: list[str]
     title: TitleSummarize
     move_files: bool = True
+    force_all: bool = False
     path: PathSummarize
     nfo: NFOSummarize
     cover: CoverSummarize
