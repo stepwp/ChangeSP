@@ -507,6 +507,13 @@ def RunNormalMode(all_movies):
             else:
                 cover_dl = download_cover(movie.info.covers, movie.fanart_file)
             check_step(cover_dl, '下载封面图片失败')
+            
+            #自适配——下载演员头像
+            inner_bar.set_description('下载演员头像')
+            if len(movie.info.actress_pics.items()) > 0:
+                download_actor(movie.info.actress_pics,movie.files[0])
+            check_step(cover_dl, '下载演员头像失败')
+
             cover, pic_path = cover_dl
             # 确保实际下载的封面的url与即将写入到movie.info中的一致
             if cover != movie.info.cover:
@@ -611,6 +618,19 @@ def download_cover(covers, fanart_path, big_covers=[]):
                 logger.debug(e, exc_info=True)
     logger.error(f"下载封面图片失败")
     logger.debug('big_covers:'+str(big_covers) + ', covers'+str(covers))
+    return None
+
+#自适配——下载演员头像函数
+def download_actor(actress_pics,file):
+    """下载封面图片"""
+    pathlist=os.path.dirname(file)
+    actors_dir=os.path.join(pathlist,'.actors')
+    os.makedirs(actors_dir)
+    for key,value in actress_pics.items():
+        name = key.split(u'\u30fb')[0]
+        path_name=os.path.join(actors_dir,name.encode('mbcs').decode('GBK')+'.jpg')
+        #print (value,path_name)
+        download(value, path_name)
     return None
 
 def get_pic_path(fanart_path, url):

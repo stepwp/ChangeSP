@@ -11,7 +11,7 @@ scanner:
     - 'Carib(beancom)?'
     - '[^a-z\d](f?hd|lt)[^a-z\d]'
   # 整理哪个文件夹下的影片？（此项留空时将在运行时询问）
-  input_directory: V:\DDD\HNJN
+  input_directory: V:\DDD
   # 哪些后缀的文件应当视为影片？
   filename_extensions: [.3gp, .avi, .f4v, .flv, .iso, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .rm, .rmvb, .ts, .vob, .webm, .wmv, .strm, .mpg]
   # 扫描影片文件时忽略指定的文件夹
@@ -42,7 +42,7 @@ crawler:
   # airav avsox avwiki fanza fc2 fc2fan javbus javdb javlib javmenu jav321 mgstage prestige arzon arzon_iv
   selection:
     #normal: [airav, avsox, javbus, javdb, javlib, jav321, mgstage, prestige]
-    normal: [javbus,airav,jav321,javdb]
+    normal: [javbus,javdb]
     fc2: [fc2, avsox, javdb, javmenu, fc2ppvdb]
     cid: [fanza]
     getchu: [dl_getchu]
@@ -72,7 +72,7 @@ summarizer:
   move_files: false
 
   #自适配——强制整理所有: true-强制扫描所有，false-有nfo文件不扫描
-  force_all: true
+  force_all: false
 
 
   # 路径相关的选项

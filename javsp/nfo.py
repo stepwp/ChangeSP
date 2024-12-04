@@ -58,8 +58,8 @@ def write_nfo(info: MovieInfo, nfo_file):
 
     genre = genre_item.copy()
     # 添加自定义分类
-    for genre_new in Cfg().summarizer.nfo.custom_genres_fields:
-        genre.append(genre_new.format(**dic))
+    # for genre_new in Cfg().summarizer.nfo.custom_genres_fields:
+    #     genre.append(genre_new.format(**dic))
     # 分类去重
     genre = list(set(genre))
     # 写入genre分类：优先使用genre_norm。在Jellyfin上，只有genre可以直接跳转，tag不可以
